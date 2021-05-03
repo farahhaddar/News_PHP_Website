@@ -2,9 +2,9 @@
 require_once realpath("vendor/autoload.php");
 use App\Models\Article;
 use App\Models\Images;
+session_start();
 
-
-if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view']=='true') {
+if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view'] == 'true') {
     $id = $_GET['id'];
     $Article = new Article();
     $Article->updateViews($id);
@@ -12,13 +12,17 @@ if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view']=='true') {
     $allImgs = $images->articleImages($id);
     $topViewd = $Article->topViewDifId($id);
     $single_article = $Article->read_single($id);
-    $total_likes=$Article->totalLikes($id);
+    $total_likes = $Article->totalLikes($id);
     $total_Unlikes = $Article->totalUnLikes($id);
-    $user_status=-1;
-    $user_status_db = $Article->user_status($id,1);
-    if($user_status_db >= 0){
-       $user_status= $user_status_db;
+    $user_status = -1;
+    if (isset($_SESSION['id'])) {
+    $user_status_db = $Article->user_status($id,$_SESSION['id']);
+    if ($user_status_db != -1) {
+        foreach ($user_status_db as $val) {
+            $user_status = $val->type;
+        }
     }
+  }
 } else {
     echo 'Something Went Wrong';
 }
@@ -44,85 +48,37 @@ if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view']=='true') {
   <div class="main">
     <!-- image -->
     <?php include_once 'Views/DetailsPage/Hero.php'?>
-    
+
    <!-- tool bar -->
    <div class="toolbar">
      <div class="analtics">
         <diV >
-        <i class="far fa-eye views" ></i>
-        <span class="numbers"><?php echo $single_article['views'] ?></span>
+         <i class="far fa-eye views" ></i>
+         <span class="numbers"><?php echo $single_article['views'] ?></span>
         </diV>
 
+      <div class='likes_btns'>
+        <Button
+            id="like_<?php echo $id ?>"
+            class="like like-Btn"
+            style="<?php if ($user_status == 1) {echo "color: #008ad3;";}?>"
+          >
+        <i class="fas fa-thumbs-up"></i>
+          </Button>
+            <span id="likes"><?php echo $total_likes; ?></span>
 
 
-        
-       <diV>
-         <!-- <i class="fas fa-thumbs-up likes" ></i>
-         <span class="numbers">
-           <?php# echo $single_article['likes'] ?>
-          </span> -->
+        <Button
+          id="unlike_<?php echo $id ?>"
+          class="unlike like-Btn"
+          style="<?php if ($user_status == 0) {echo "color: #ff0b37";}?>"
+          >
+          <i class="fas fa-thumbs-down"></i>
+          </Button>
+          <span id="unlikes"><?php echo $total_Unlikes; ?></span>
 
-
-        
-                     <input type="button" 
-                     value="Like" 
-                     id="like_1_<?php echo $id;?>;?>"
-                      class="like" 
-                      style=
-                      "<?php  if($user_status == 1){ echo "color: #ffa449;"; } ?>" 
-                      />
-                      &nbsp;
-                      (
-                        <span 
-                        id="likes"
-                        >
-                        <?php echo $total_likes; ?>
-                        </span>
-                        )
-                        &nbsp;
-
-                       <input
-                       type="button"
-                       value="Unlike"
-                       id="unlike_1_<?php echo $id; ?>;?>" 
-                       class="unlike"
-                       style="<?php if($user_status == 0){ echo "color: #ffa449;"; } ?>" 
-                       />
-                       &nbsp;
-                       (
-                        <span id="unlike">
-                        <?php echo $total_Unlikes; ?>
-                        </span>
-                        )
-
-
-
-                
-                
-
-
-
-
-
-
-        </diV>
       </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
       <div class="share-btn-container">
         <span class='share'> Share On:</span>
@@ -134,17 +90,6 @@ if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view']=='true') {
         </a>
       </div>
     </div>
-   
-
-
-
-
-
-
-
-
-
-
 
 
     <!-- Body Content -->
@@ -172,7 +117,8 @@ if (isset($_GET['id']) && isset($_GET['view']) && $_GET['view']=='true') {
 
 
 </body>
-  
+
+<script src="Scripts/logout.js"></script>
 <script src="Scripts/ajax.js"></script>
 <script src="Scripts/Slider.js"></script>
 <script src="Scripts/socialShare.js"></script>

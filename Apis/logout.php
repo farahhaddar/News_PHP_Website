@@ -1,6 +1,7 @@
 <?php
 require_once realpath("../vendor/autoload.php");
-use App\Models\Article;
+use App\Models\Auth;
+session_start();
 
 // Headers
 header('Access-Control-Allow-Origin: *');
@@ -9,10 +10,11 @@ header('Application: application/json');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Access-Control-Allow-Headers,Content-Type,Access-Control-Allow-Methods, Authorization, X-Requested-With');
 
-$status = new Article();
-if (isset($_REQUEST['user_id']) && isset($_REQUEST['article_id'])){
-    $article = $_REQUEST['article_id'];
-    $user = $_REQUEST['user_id'];
-    $result = $status->user_status($article,$user);
-    echo json_encode(array('user_status'=>$result));
+
+$log = new Auth();
+$res=$log->logout();
+if($res){
+echo json_encode(array('status' => 200, 'Location' => '/index.php'));
+}else{
+    echo json_encode(array('status' => 500, 'message' => 'something went wrong'));
 }

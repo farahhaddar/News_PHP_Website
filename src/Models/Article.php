@@ -105,7 +105,11 @@ class Article
         }
     }
 
-    // total likes
+    /**
+     * read total number of likes for a single article in the database
+     * @param $id
+     */
+
     public function totalLikes($id)
     {
         $id = htmlspecialchars(strip_tags($id));
@@ -121,7 +125,11 @@ class Article
         }
     }
 
-    // total unlikes
+    /**
+     * read total number of unlikes for a single article in the database
+     * @param $id
+     */
+
     public function totalUnLikes($id)
     {
         $id = htmlspecialchars(strip_tags($id));
@@ -129,7 +137,7 @@ class Article
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(1, $this->id);
         $stmt->execute([$id]);
-        $article_likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $article_likes = $stmt->fetchAll(PDO::FETCH_OBJ);
         if (count($article_likes) > 0) {
             return count($article_likes);
         } else {
@@ -137,8 +145,14 @@ class Article
         }
     }
 
+    /**
+     * check if a user already liked a post or not
+     * @param article $id
+     *  @param  user $id
+     */
     public function user_status($article_id, $user_id)
     {
+
         $user_id = htmlspecialchars(strip_tags($user_id));
         $article_id = htmlspecialchars(strip_tags($article_id));
         $query = 'SELECT * FROM likes WHERE article_id=? AND user_id=?';
@@ -148,23 +162,24 @@ class Article
         $stmt->execute([$article_id, $user_id]);
         $user_status = $stmt->fetchAll(PDO::FETCH_OBJ);
         if (count($user_status) > 0) {
-            foreach ($user_status as $val) {
-                return ($val->type);
-            }
+            return $user_status;
         } else {
-            return false;
+            return -1;
         }
     }
 
-    // update status
+    /**
+     * update number of likes/unlikes in  database
+     * @param article $id
+     *  @param  user $id
+     *  @param  type
+     */
+
     public function updateLikes($article_id, $user_id, $type)
     {
         $article_id = htmlspecialchars(strip_tags($article_id));
         $user_id = htmlspecialchars(strip_tags($user_id));
         $type = htmlspecialchars(strip_tags($type));
-        error_log($article_id);
-        error_log($user_id);
-        error_log($type);
         $query = 'SELECT * FROM likes WHERE article_id=? AND user_id=?';
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(1, $this->article_id);
@@ -173,7 +188,6 @@ class Article
         $user_status = $stmt->fetchAll(PDO::FETCH_OBJ);
         if (count($user_status) > 0) {
             $count = count($user_status);
-            error_log($count);
         }
 
         if ($count == 0) {
@@ -189,93 +203,13 @@ class Article
             $stmt->bindParam(1, $this->type);
             $stmt->bindParam(1, $this->user_id);
             $stmt->bindParam(1, $this->article_id);
-            $stmt->execute([$user_id, $article_id, $type]);
+            $stmt->execute([$type, $user_id, $article_id]);
         }
 
         $totalLikes = $this->totalLikes($article_id);
         $totalUnLikes = $this->totalUnLikes($article_id);
-        error_log($totalLikes);
-        error_log($$totalUnLikes);
         $return_arr = array('likes' => $totalLikes, 'unlikes' => $totalUnLikes);
         return $return_arr;
     }
-
-    /**
-     * read total number of likes for a single article in the database
-     * @param $id
-     */
-
-    /* public function totalLikes($id)
-    {
-    $id = htmlspecialchars(strip_tags($id));
-    $query = 'SELECT * FROM likes WHERE article_id=?';
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(1, $this->id);
-    $stmt->execute([$id]);
-    $article_likes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (count($article_likes) > 0) {
-    return count($article_likes);
-    } else {
-    return 0;
-    }
-    }
-
-    /**
-     * check if a user already liked a post or not
-     * @param article $id
-     *  @param  user $id
-     */
-
-    /* public function user_status($article_id, $user_id)
-    {
-    $user_id = htmlspecialchars(strip_tags($user_id));
-    $article_id = htmlspecialchars(strip_tags($article_id));
-    $query = 'SELECT * FROM likes WHERE article_id=? AND user_id=?';
-    $stmt = $this->db->prepare($query);
-    $stmt->bindParam(1, $this->article_id);
-    $stmt->bindParam(1, $this->user_id);
-    $stmt->execute([$article_id, $user_id]);
-    $user_status = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (count($user_status) > 0) {
-    return 1;
-    } else {
-    return 0;
-    }
-    }
-
-    /**
-     * update number of likes in  database
-     * @param article $id
-     *  @param  user $id
-     *  @param  user_Status
-     */
-
-    /*  public function updateLikes($article_id, $user_id, $user_status)
-{
-$article_id = htmlspecialchars(strip_tags($article_id));
-$user_id = htmlspecialchars(strip_tags($user_id));
-$user_status = htmlspecialchars(strip_tags($user_status));
-
-if ($user_status==0) {
-$query = "INSERT INTO likes(user_id,article_id) values(?,?)";
-$stmt = $this->db->prepare($query);
-$stmt->bindParam(1, $user_id);
-$stmt->bindParam(1, $article_id);
-} else {
-$query = 'DELETE FROM likes WHERE user_id=? && article_id=?';
-$stmt = $this->db->prepare($query);
-$stmt->bindParam(1, $this->user_id);
-$stmt->bindParam(1, $this->article_id);
-}
-if ($stmt->execute([$user_id, $article_id])) {
-$user_status = $this->user_status($article_id, $user_id);
-$totalLikes = $this->totalLikes($article_id);
-$return_arr = array('likes' => $totalLikes,'user_status'=> $user_status );
-return $return_arr;
-} else {
-return false;
-}
-
-}*/
 
 }

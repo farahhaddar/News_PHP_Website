@@ -16,6 +16,18 @@ body {
   text-align: center;
   background: #000000;
   color: white;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+.header-btn{
+  position:absolute;
+     top:0;
+     right:0;
+  cursor: pointer;
+  color: white;
+  font-size: 18px;
+  font-weight: 800;
 }
 
 .header h1 {
@@ -161,13 +173,8 @@ body {
 }
 .analtics {
   display: flex;
-  align-items: center;
 }
 
-.fa-thumbs-up {
-  margin-left: 20px;
-  margin-right: 3px;
-}
 .title {
   font-size: 40px;
   font-weight: bold;
@@ -273,16 +280,20 @@ text-decoration: none;
   }
 }
 
-@media only screen and (max-width: 300px) {
+@media only screen and (max-width: 370px) {
   .prev,
   .next,
   .text {
     font-size: 11px;
   }
-  .toolbar {
+  .toolbar,.analtics {
     display: flex;
     flex-direction: column;
   }
+  .like-Btn{
+  margin-left: 0px !important;
+}
+  
 
 }
 
@@ -313,9 +324,6 @@ text-decoration: none;
   padding-right: 10px;
 }
 
-.cardlike {
-  margin-left: 0%;
-}
 .links {
   color: black;
   font-weight: 600;
@@ -419,5 +427,21 @@ text-decoration: none;
 }
 .date-a {
   color: grey;
+  font-weight: 600;
+}
+
+.likes_btns{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.like-Btn{
+  background-color: rgba(255, 255, 255, 0); 
+  border: none; 
+  font-size: 18px; 
+  cursor: pointer;
+  margin-left: 15px;
+}
+#likes,#unlikes{
   font-weight: 600;
 }

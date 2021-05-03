@@ -1,6 +1,7 @@
 <?php
 require_once realpath("vendor/autoload.php");
 use App\Models\Article;
+session_start();
 
 $Article = new Article();
 $topViewd = $Article->topViewd();
@@ -50,6 +51,10 @@ $all = $Article->readAll();
 
 
 </body>
-<script src="Scripts/ajax.js"></script>
-
+<script>
+  function location(){
+     window.location.href='/Login.php'
+  }
+</script>
+<script src="Scripts/logout.js"></script>
 </html>
