@@ -46,7 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
    </div>
   
   <div class="container signin">
-    <p>Don't have an account? <a href="/Register.php">Sign in</a>.</p>
+    <p>Don't have an account? <a href="/Register.php">Sign Up</a>.</p>
   </div>
 </form>
 

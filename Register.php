@@ -10,7 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors = $model->register($email, $password);
     if($errors){
      $values=array_values($errors);
-     error_log(print_r($values));
      $email_error=$values[0];
      $password_error= $values[1];
      }
