@@ -33,14 +33,16 @@ class Auth
         $password = htmlspecialchars(strip_tags($password));
         $model = new User();
         $user = $model->getUser($email);
+        if($user){
         if (password_verify($password,$user->password)) {
-            error_log($user->id);
             $_SESSION['id'] = $user->id;
-            error_log($_SESSION['id']);
             header('Location: ../index.php');
         } else {
-            return 'wrong password';
+            return 'Wrong password';
         }
+       }else{
+           return "Email is not Found";
+       }
 
         exit();
     }
