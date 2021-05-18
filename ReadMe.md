@@ -6,7 +6,7 @@
 3- Run the project on any port.
 
 
-#My Notes:
+# My Notes:
 
 1- It was my first time to use jquery and ajax call in vanilla Js . It took me some time to understand how it works. But it turned out to be so simple and eassy.
 
